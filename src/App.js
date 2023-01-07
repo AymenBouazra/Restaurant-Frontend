@@ -4,18 +4,24 @@ import 'bootstrap/dist/js/bootstrap.bundle'
 import 'react-toastify/dist/ReactToastify.css';
 import '@fortawesome/react-fontawesome'
 
-import { BrowserRouter as Router , Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import Navbar from './components/Navbar';
-import Home from './components/Home';
+const Home = React.lazy(() => import('./components/Home'))
+const Login = React.lazy(() => import('./components/AuthComponents/Login'))
+
+const Register = React.lazy(() => import('./components/AuthComponents/Register'))
+
 function App() {
   return (
     <div className="App">
       <Router>
-      <Navbar />
-        <Suspense fallback={<h2 className='text-center'>Loading...</h2>}>
+        <Navbar />
+        <Suspense fallback='Loading...'>
           <Routes>
-              <Route path='/' element={<Home />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/' element={<Home />} />
           </Routes>
         </Suspense>
       </Router>

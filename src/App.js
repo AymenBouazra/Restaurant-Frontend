@@ -5,34 +5,32 @@ import 'react-toastify/dist/ReactToastify.css';
 import '@fortawesome/react-fontawesome'
 import {
   createBrowserRouter,
-  RouterProvider,
-  Outlet
+  RouterProvider
 } from "react-router-dom";
-import React, { Suspense } from 'react';
-import Navbar from './components/Navbar';
-import Login from './components/AuthComponents/Login';
-import Register from './components/AuthComponents/Register';
+import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import routes from './routes'
+const Layout = React.lazy(() => import('./components/Layout'));
+const Login = React.lazy(() => import('./components/AuthComponents/Login'));
+const Register = React.lazy(() => import('./components/AuthComponents/Register'));
+const Loading = 
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-info" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
 
-const Layout = () => {
-  return (<div className='app'>
-    <Navbar />
-    <Outlet />
-  </div>)
-}
-const routing = routes.map((route)=> {
-  console.log(route);
-  return(
-    {
-      path:route.path,
-      element:<route.element />,
-      exact : route.exact
+const routing = routes.map((route) => {
+  return (
+    route.element && {
+      path: route.path,
+      element: <route.element />,
+      exact: route.exact,
+      name: route.name
     }
   )
 })
 const router = createBrowserRouter([
-
   {
     path: "/register",
     element: <Register />,
@@ -63,9 +61,7 @@ function App() {
         pauseOnHover
         theme="colored"
       />
-      <Suspense fallback='Loading...'>
-        <RouterProvider router={router} />
-      </Suspense>
+      <RouterProvider router={router} fallbackElement={Loading}/>
     </div>
   );
 }

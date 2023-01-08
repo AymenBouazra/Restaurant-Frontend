@@ -27,13 +27,9 @@ const Login = () => {
         }}
         onSubmit={ async (values, { setSubmitting }) => {
           try {
-            axios.post('http://localhost:4000/login', values).then((response)=>{
-              window.location.href='/'
-              
-            }).then(()=>{
-              toast.success('Welcome to your dashboard')
-              
-            })
+            const response = await axios.post('http://localhost:4000/login', values)
+            toast.success(response.data.message)
+            navigate('/')
           } catch (error) {
             toast.error(error.response.data.message)
           }

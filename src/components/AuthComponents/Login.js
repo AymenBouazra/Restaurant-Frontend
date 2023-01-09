@@ -30,6 +30,7 @@ const Login = () => {
             const response = await axios.post('http://localhost:4000/login', values)
             toast.success(response.data.message)
             navigate('/')
+            return true
           } catch (error) {
             toast.error(error.response.data.message)
           }

@@ -33,6 +33,7 @@ const Register = () => {
             const response =  await axios.post('http://localhost:4000/register', values)
             navigate('/login')
             toast.success(response.data.message)
+            return true
           } catch (error) {
             toast.error(error.response.data.message)
           }

@@ -14,12 +14,18 @@ const Layout = () => {
         setSidebarOptions((prevState) => { return { ...setSidebarOptions, sidebarDocked: !prevState.sidebarDocked } })
 
     }
-    const mediaQueryChanged = () => {
-        setSidebarOptions(() => { return { ...setSidebarOptions, sidebarDocked: mql.matches } });
-    }
     useEffect(() => {
+        let clean = true
+        const mediaQueryChanged = () => {
+            if (clean) {
+                setSidebarOptions(() => { return { ...setSidebarOptions, sidebarDocked: mql.matches } });
+            }
+        }
         mql.addEventListener('change', mediaQueryChanged);
-    })
+        return function cleanup() {
+            clean = false
+        }
+    },[mql])
     return (
         <div className='App'>
             <Sidebar

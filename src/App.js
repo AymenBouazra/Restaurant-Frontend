@@ -7,16 +7,16 @@ import {
   createBrowserRouter,
   RouterProvider
 } from "react-router-dom";
-import React from 'react';
+import React, { Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import routes from './routes'
 const Layout = React.lazy(() => import('./components/Layout'));
 const Login = React.lazy(() => import('./components/AuthComponents/Login'));
 const Register = React.lazy(() => import('./components/AuthComponents/Register'));
 const Loading = 
-  <div class="d-flex justify-content-center">
-    <div class="spinner-grow text-info" role="status">
-      <span class="visually-hidden">Loading...</span>
+  <div className="d-flex justify-content-center vh-100 align-items-center">
+    <div className="spinner-grow text-info" role="status">
+      <span className="visually-hidden">Loading...</span>
     </div>
   </div>
 
@@ -61,7 +61,10 @@ function App() {
         pauseOnHover
         theme="colored"
       />
+      <Suspense fallback={Loading}>
       <RouterProvider router={router} fallbackElement={Loading}/>
+
+      </Suspense>
     </div>
   );
 }

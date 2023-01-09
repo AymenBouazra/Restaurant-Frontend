@@ -1,5 +1,7 @@
 import {lazy} from "react"
 const Home = lazy(() => import('./components/Home'))
+const CreateUser = lazy(()=> import('./components/Pages/User/CreateUser'))
+const ListUser = lazy(()=> import('./components/Pages/User/ListUser'))
 const CreateProduct = lazy(()=> import('./components/Pages/Product/CreateProduct'))
 const ListProduct = lazy(()=> import('./components/Pages/Product/ListProduct'))
 const ListCategory = lazy(()=> import('./components/Pages/Category/ListCategory'))
@@ -9,6 +11,18 @@ const routes = [
         path: '/',
         element: Home,
         name:'Home',
+        exact: true
+    },
+    {
+        path: '/users/add',
+        element: CreateUser,
+        name:'Create-user',
+        exact: true
+    },
+    {
+        path: '/users',
+        element: ListUser,
+        name:'Users',
         exact: true
     },
     {

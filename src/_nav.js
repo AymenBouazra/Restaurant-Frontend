@@ -1,5 +1,16 @@
 const navs = [
     {
+        name:'Users-List',
+        children:[{
+            to: '/users',
+            name:'List users'
+        },
+        {
+            to: '/users/add',
+            name:'Add user'
+        }]
+    },
+    {
         name:'Product-List',
         children:[{
             to: '/products',

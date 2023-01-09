@@ -10,6 +10,7 @@ import {
 import React, { Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import routes from './routes'
+import Page404 from './components/Page404';
 const Layout = React.lazy(() => import('./components/Layout'));
 const Login = React.lazy(() => import('./components/AuthComponents/Login'));
 const Register = React.lazy(() => import('./components/AuthComponents/Register'));
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <Layout />,
     children: routing
+  },
+  {
+    path:'*',
+    element:<Page404 />
   }
 
 ]);

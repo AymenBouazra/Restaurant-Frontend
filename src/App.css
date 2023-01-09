@@ -45,3 +45,15 @@ a{
 .sidebar-sub-link:hover{
   background-color: #3a3f49;
 }
+
+.btn-success{
+  color: white !important;
+  background-color: #06d6a0 !important;
+  border-color: #06d6a0 !important;
+}
+
+.btn-danger{
+  color: white !important;
+  border-color: #e26d5c !important;
+  background-color: #e26d5c !important;
+}

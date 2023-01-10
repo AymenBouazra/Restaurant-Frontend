@@ -1,16 +1,20 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronUp, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faChevronUp, faEdit, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons'
 import DataTable from 'react-data-table-component'
-
+import Modal from 'react-modal';
+import { Formik } from 'formik'
+import { toast } from 'react-toastify'
 // const ExpandedComponent = ({ data }) => <pre>{data.email}</pre>;
 
 
 
 const ListUser = () => {
   const [users, setUsers] = useState([])
-  const [pending, setPending] = React.useState(true);
+  const [userToUpdate, setUserToUpdate] = useState({})
+  const [pending, setPending] = useState(true);
+  const [modalIsOpen, setIsOpen] = useState(false);
   const Loading =
     <div className="d-flex justify-content-center h-100 align-items-center">
       <div className="spinner-grow text-info" role="status">
@@ -34,11 +38,16 @@ const ListUser = () => {
       sortable: true
     },
     {
+      name: 'Photo',
+      selector: row => row.photo,
+      cell: ({ photo }) => <img src={photo} alt='' width='50' />,
+    },
+    {
       width: '200px',
       name: 'Actions',
       selector: row => row._id,
       cell: ({ _id }) => <div className='d-flex'>
-        <button onClick={() => handleUpdate(_id)} className='btn btn-success me-2'><FontAwesomeIcon icon={faEdit} /></button>
+        <button onClick={() => openModal(_id)} className='btn btn-success me-2'><FontAwesomeIcon icon={faEdit} /></button>
         <button onClick={() => handleDelete(_id)} className='btn btn-danger'><FontAwesomeIcon icon={faTrash} /></button>
       </div>,
       ignoreRowClick: true,
@@ -79,14 +88,31 @@ const ListUser = () => {
       }
     },
   }
+  
+  const modalStyles = {
+    content: {
+      borderRadius:'10px',
+      top: '50%',
+      left: '50%',
+      width:'50%',
+      minHeight:'700px',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+  Modal.setAppElement("*");
+
+  const openModal = async (id) => {
+    const response = await axios.get('http://localhost:4000/api/users/'+id)
+    setUserToUpdate(response.data)
+    setIsOpen(true);
+  }
+  const closeModal = () => {
+    setIsOpen(false);
+  }
 
   const handleDelete = async (id) => {
     await axios.delete('http://localhost:4000/api/users/' + id)
-    getUsers()
-  }
-
-  const handleUpdate = async (id) => {
-    await axios.put('http://localhost:4000/api/users/' + id)
     getUsers()
   }
 
@@ -111,7 +137,6 @@ const ListUser = () => {
         responsive
         progressPending={pending}
         progressComponent={Loading}
-        fixedHeader
         theme="default"
         customStyles={customStyles}
         highlightOnHover
@@ -120,6 +145,107 @@ const ListUser = () => {
         sortIcon={<FontAwesomeIcon className='ms-2' color='lightblue' icon={faChevronUp} />}
         getUsersFn={getUsers}
       />
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={modalStyles}
+        ariaHideApp={false}
+        contentLabel="Update Modal"
+      >
+        
+        <div>Update user here<FontAwesomeIcon onClick={closeModal} icon={faXmark}  className='float-end cursor-pointer p-2' /></div>
+        <Formik
+          initialValues={userToUpdate || { userName: '', email: '', password: '', role: '' }}
+          validate={values => {
+            const errors = {};
+            if (!values.userName) {
+              errors.userName = 'Required';
+            }
+            if (!values.password) {
+              errors.password = 'Required';
+            }
+            if (!values.role) {
+              errors.role = 'Required';
+            }
+            if (!values.email) {
+              errors.email = 'Required';
+            } else if (
+              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+            ) {
+              errors.email = 'Invalid email address';
+            }
+            return errors;
+          }}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              const response = await axios.put('http://localhost:4000/api/users/' + userToUpdate._id, values)
+              getUsers()
+              toast.success(response.data.message)
+              return true
+            } catch (error) {
+              toast.error(error.response.data.message)
+            }
+          }}
+          enableReinitialize
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            /* and other goodies */
+          }) => (
+            <form onSubmit={handleSubmit} className='d-flex flex-column w-100 p-4'>
+              <label>Username</label>
+              <input
+                type="text"
+                name="userName"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.userName}
+              />
+              <p className='text-danger px-4 py-2'>{errors.userName && touched.userName && errors.userName}</p>
+              <label>E-mail</label>
+              <input
+                type="email"
+                name="email"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+              />
+              <p className='text-danger px-4 py-2'>{errors.email && touched.email && errors.email}</p>
+              <label>Role</label>
+              <input
+                type="text"
+                name="role"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.role}
+              />
+              <p className='text-danger px-4 py-2'>{errors.role && touched.role && errors.role}</p>
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+              />
+              <p className='text-danger px-4 py-2'>{errors.password && touched.password && errors.password}</p>
+              <button type="submit" className='btn btn-success' disabled={isSubmitting}>
+                Update user
+              </button>
+            </form>
+          )}
+        </Formik>
+      </Modal>
     </div>
   )
 }

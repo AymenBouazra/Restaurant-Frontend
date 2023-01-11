@@ -11,6 +11,7 @@ import React, { Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import routes from './routes'
 import Page404 from './components/Page404';
+import PrivateRoute from './PrivateRoute/PrivateRoute';
 const Layout = React.lazy(() => import('./components/Layout'));
 const Login = React.lazy(() => import('./components/AuthComponents/Login'));
 const Register = React.lazy(() => import('./components/AuthComponents/Register'));
@@ -42,13 +43,13 @@ const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <Layout />,
+    element: <PrivateRoute><Layout /></PrivateRoute>,
     children: routing
   },
   {
     path:'*',
     element:<Page404 />
-  }
+  },
 
 ]);
 function App() {

@@ -57,3 +57,7 @@ a{
   border-color: #e26d5c !important;
   background-color: #e26d5c !important;
 }
+
+.cursor-pointer{
+  cursor: pointer;
+}

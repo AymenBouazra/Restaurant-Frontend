@@ -7,6 +7,7 @@ const ListProduct = lazy(()=> import('./components/Pages/Product/ListProduct'))
 const ListCategory = lazy(()=> import('./components/Pages/Category/ListCategory'))
 const CreateCategory = lazy(()=> import('./components/Pages/Category/CreateCategory'))
 const routes = [
+    { path: '/', exact: true, name: 'Home' },
     {
         path: '/',
         element: Home,

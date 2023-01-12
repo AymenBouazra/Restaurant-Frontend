@@ -30,7 +30,7 @@ const Register = () => {
         }}
         onSubmit={async(values, { setSubmitting }) => {
           try {
-            const response =  await axios.post('http://localhost:4000/register', values)
+            const response =  await axios.post('http://localhost:4000/api/register', values)
             navigate('/login')
             toast.success(response.data.message)
             return true

@@ -10,7 +10,7 @@ const Layout = () => {
         sidebarDocked: mql.matches,
     })
 
-    const onSetSidebarOpen = (x) => {
+    const onSetSidebarOpen = () => {
         setSidebarOptions((prevState) => { return { ...setSidebarOptions, sidebarDocked: !prevState.sidebarDocked } })
 
     }
@@ -27,7 +27,6 @@ const Layout = () => {
         }
     },[mql])
     return (
-        <div className='App'>
             <Sidebar
                 sidebar={<SidebarNav />}
                 open={sidebarOptions.sidebarOpen}
@@ -36,9 +35,10 @@ const Layout = () => {
                 styles={{ sidebar: { background: "#20232A", color:'white', minWidth: '230px' } }}
             >
                 <Navbar openSideBar={onSetSidebarOpen} />
-                <Outlet />
+                <div className='bg-light vh-100'>
+                <Outlet  />
+                </div>
             </Sidebar>
-        </div>
     )
 }
 

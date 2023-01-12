@@ -27,7 +27,7 @@ const Login = () => {
         }}
         onSubmit={ async (values, { setSubmitting }) => {
           try {
-            const response = await axios.post('http://localhost:4000/login', values)
+            const response = await axios.post('http://localhost:4000/api/login', values)
             localStorage.setItem('token',response.data.token)
             toast.success(response.data.message)
             navigate('/')

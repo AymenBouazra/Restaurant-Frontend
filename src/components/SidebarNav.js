@@ -18,7 +18,7 @@ const SidebarNav = () => {
                                         {nav.name} <FontAwesomeIcon size='2xs' icon={faChevronDown} />
                                     </label>
                                     <div className="collapse collapse-vertical" id={nav.name}>
-                                        <div className="card-body d-flex flex-column" style={{ width: '100%' }} >
+                                        <div className="card-body d-flex flex-column w-100" >
 
                                             {nav.children.map((ch, idx) => {
                                                 return (<Link className='sidebar-sub-link' key={idx} to={ch.to}>{ch.name}</Link>)

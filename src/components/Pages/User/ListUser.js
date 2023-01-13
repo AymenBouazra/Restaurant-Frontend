@@ -6,9 +6,6 @@ import DataTable from 'react-data-table-component'
 import Modal from 'react-modal';
 import { Formik } from 'formik'
 import { toast } from 'react-toastify'
-// const ExpandedComponent = ({ data }) => <pre>{data.email}</pre>;
-
-
 
 const ListUser = () => {
   const [users, setUsers] = useState([])
@@ -16,12 +13,13 @@ const ListUser = () => {
   const [pending, setPending] = useState(true);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [filterText, setFilterText] = useState('')
-  const Loading =
+  const Loading = (
     <div className="d-flex justify-content-center h-100 align-items-center">
       <div className="spinner-grow text-info" role="status">
         <span className="visually-hidden">Loading...</span>
       </div>
     </div>
+  )
   const columns = [
     {
       name: 'Username',
@@ -48,8 +46,8 @@ const ListUser = () => {
       name: 'Actions',
       selector: row => row._id,
       cell: ({ _id }) => <div className='d-flex'>
-        <button onClick={() => openModal(_id)} className='btn btn-success me-2'><FontAwesomeIcon icon={faEdit} /></button>
-        <button onClick={() => handleDelete(_id)} className='btn btn-danger'><FontAwesomeIcon icon={faTrash} /></button>
+        <button onClick={() => openModal(_id)} className='btn btn-success me-2 rounded-0'><FontAwesomeIcon icon={faEdit} /></button>
+        <button onClick={() => handleDelete(_id)} className='btn btn-danger rounded-0'><FontAwesomeIcon icon={faTrash} /></button>
       </div>,
       ignoreRowClick: true,
       allowOverflow: true,
@@ -122,19 +120,25 @@ const ListUser = () => {
     setUsers(response.data)
     setPending(false)
   }
-  
-  const searchText =(e) => {
-    setFilterText(e.target.value)
-    users.filter((user)=> user.email === user.email.toLowerCase().includes(filterText.toLowerCase()))
-  }
-  const subHeaderComponent = <input onChange={searchText} className='form-control w-25' placeholder='Search' />
 
+  const filteredItems = users.filter(user => user.userName.toLowerCase().includes(filterText.toLowerCase()))
+  const searchText = (e) => {
+    setFilterText(e.target.value)
+  }
+  const subHeaderComponent = (
+    <div className='d-flex w-25'>
+      <input onChange={searchText} className='form-control rounded-0' value={filterText} placeholder='Search' />
+      <button className='btn btn-secondary rounded-0' onClick={() => setFilterText('')}>
+        <FontAwesomeIcon color='white' icon={faXmark} size='xl' />
+      </button>
+    </div>
+  )
 
   useEffect(() => {
     const controller = new AbortController();
     getUsers()
     return controller.abort()
-  }, [users,filterText])
+  }, [filterText])
   return (
     <div className="card m-4">
       <div className="card-header">
@@ -142,18 +146,16 @@ const ListUser = () => {
       </div>
       <div className="card-body">
         <DataTable
-          // title={<h1 className='text-uppercase mb-5'>Users List</h1>}
           subHeader
           pagination
           columns={columns}
-          data={users}
+          data={filteredItems}
           responsive
           progressPending={pending}
           progressComponent={Loading}
           theme="default"
           customStyles={customStyles}
           highlightOnHover
-          pointerOnHover
           subHeaderComponent={subHeaderComponent}
           fixedHeaderScrollHeight="700px"
           sortIcon={<FontAwesomeIcon className='ms-2' color='lightblue' icon={faChevronUp} />}
@@ -166,17 +168,13 @@ const ListUser = () => {
           ariaHideApp={false}
           contentLabel="Update Modal"
         >
-
           <div>Update user here<FontAwesomeIcon onClick={closeModal} icon={faXmark} className='float-end cursor-pointer p-2' /></div>
           <Formik
-            initialValues={userToUpdate || { userName: '', email: '', password: '', role: '' }}
+            initialValues={userToUpdate || { userName: '', email: '', role: '' }}
             validate={values => {
               const errors = {};
               if (!values.userName) {
                 errors.userName = 'Required';
-              }
-              if (!values.password) {
-                errors.password = 'Required';
               }
               if (!values.role) {
                 errors.role = 'Required';
@@ -190,10 +188,11 @@ const ListUser = () => {
               }
               return errors;
             }}
-            onSubmit={async (values, { setSubmitting }) => {
+            onSubmit={async (values) => {
               try {
                 const response = await axios.put('http://localhost:4000/api/users/' + userToUpdate._id, values)
                 getUsers()
+                closeModal()
                 toast.success(response.data.message)
                 return true
               } catch (error) {
@@ -210,7 +209,6 @@ const ListUser = () => {
               handleBlur,
               handleSubmit,
               isSubmitting,
-              /* and other goodies */
             }) => (
               <form onSubmit={handleSubmit} className='d-flex flex-column w-100 p-4'>
                 <label>Username</label>
@@ -253,7 +251,7 @@ const ListUser = () => {
                   value={values.password}
                 />
                 <p className='text-danger px-4 py-2'>{errors.password && touched.password && errors.password}</p>
-                <button type="submit" className='btn btn-success' disabled={isSubmitting}>
+                <button type="submit" className='btn btn-success'>
                   Update user
                 </button>
               </form>
@@ -262,7 +260,6 @@ const ListUser = () => {
         </Modal>
       </div>
     </div>
-
   )
 }
 

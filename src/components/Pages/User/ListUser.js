@@ -15,6 +15,7 @@ const ListUser = () => {
   const [userToUpdate, setUserToUpdate] = useState({})
   const [pending, setPending] = useState(true);
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [filterText, setFilterText] = useState('')
   const Loading =
     <div className="d-flex justify-content-center h-100 align-items-center">
       <div className="spinner-grow text-info" role="status">
@@ -121,12 +122,19 @@ const ListUser = () => {
     setUsers(response.data)
     setPending(false)
   }
+  
+  const searchText =(e) => {
+    setFilterText(e.target.value)
+    users.filter((user)=> user.email === user.email.toLowerCase().includes(filterText.toLowerCase()))
+  }
+  const subHeaderComponent = <input onChange={searchText} className='form-control w-25' placeholder='Search' />
+
 
   useEffect(() => {
     const controller = new AbortController();
     getUsers()
     return controller.abort()
-  }, [])
+  }, [users,filterText])
   return (
     <div className="card m-4">
       <div className="card-header">
@@ -135,6 +143,7 @@ const ListUser = () => {
       <div className="card-body">
         <DataTable
           // title={<h1 className='text-uppercase mb-5'>Users List</h1>}
+          subHeader
           pagination
           columns={columns}
           data={users}
@@ -145,6 +154,7 @@ const ListUser = () => {
           customStyles={customStyles}
           highlightOnHover
           pointerOnHover
+          subHeaderComponent={subHeaderComponent}
           fixedHeaderScrollHeight="700px"
           sortIcon={<FontAwesomeIcon className='ms-2' color='lightblue' icon={faChevronUp} />}
           getUsersFn={getUsers}

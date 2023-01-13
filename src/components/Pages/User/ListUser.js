@@ -170,7 +170,7 @@ const ListUser = () => {
         >
           <div>Update user here<FontAwesomeIcon onClick={closeModal} icon={faXmark} className='float-end cursor-pointer p-2' /></div>
           <Formik
-            initialValues={userToUpdate || { userName: '', email: '', role: '' }}
+            initialValues={userToUpdate || { userName: '', email: '', password:'', role: '' }}
             validate={values => {
               const errors = {};
               if (!values.userName) {

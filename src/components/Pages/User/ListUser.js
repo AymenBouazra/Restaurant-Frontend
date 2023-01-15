@@ -121,7 +121,7 @@ const ListUser = () => {
     setPending(false)
   }
 
-  const filteredItems = users.filter(user => user.userName.toLowerCase().includes(filterText.toLowerCase()))
+  const filteredItems = users.filter(user => user.userName.toLowerCase().includes(filterText.toLowerCase()) || user.email.toLowerCase().includes(filterText.toLowerCase()) ||user.role.toLowerCase().includes(filterText.toLowerCase()) )
   const searchText = (e) => {
     setFilterText(e.target.value)
   }

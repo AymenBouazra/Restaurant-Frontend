@@ -18,7 +18,7 @@ const createOne = data => {
     return http.post("/users", data);
 };
 
-const TagService = {
+const UserService = {
     getAllUsers,
     updateOne,
     removeOne,
@@ -26,4 +26,4 @@ const TagService = {
     createOne
 }
 
-export default TagService
+export default UserService

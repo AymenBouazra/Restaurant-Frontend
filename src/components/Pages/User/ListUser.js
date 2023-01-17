@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp, faEdit, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons'
@@ -6,7 +5,7 @@ import DataTable from 'react-data-table-component'
 import Modal from 'react-modal';
 import { Formik } from 'formik'
 import { toast } from 'react-toastify'
-
+import userService from '../../../services/userServices'
 const ListUser = () => {
   const [users, setUsers] = useState([])
   const [userToUpdate, setUserToUpdate] = useState({})
@@ -102,7 +101,7 @@ const ListUser = () => {
   Modal.setAppElement("*");
 
   const openModal = async (id) => {
-    const response = await axios.get('http://localhost:4000/api/users/' + id)
+    const response = await userService.getOne(id)
     setUserToUpdate(response.data)
     setIsOpen(true);
   }
@@ -111,12 +110,12 @@ const ListUser = () => {
   }
 
   const handleDelete = async (id) => {
-    await axios.delete('http://localhost:4000/api/users/' + id)
+    await userService.removeOne(id)
     getUsers()
   }
 
   const getUsers = async () => {
-    const response = await axios.get('http://localhost:4000/api/users')
+    const response = await userService.getAllUsers()
     setUsers(response.data)
     setPending(false)
   }
@@ -190,7 +189,7 @@ const ListUser = () => {
             }}
             onSubmit={async (values) => {
               try {
-                const response = await axios.put('http://localhost:4000/api/users/' + userToUpdate._id, values)
+                const response = await userService.updateOne(userToUpdate._id, values)
                 getUsers()
                 closeModal()
                 toast.success(response.data.message)

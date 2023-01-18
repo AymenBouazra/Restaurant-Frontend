@@ -65,7 +65,7 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="colored"
       />
       <Suspense fallback={Loading}>
       <RouterProvider router={router} fallbackElement={Loading}/>

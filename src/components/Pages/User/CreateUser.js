@@ -1,17 +1,19 @@
 import { Formik } from 'formik';
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import userService from '../../../services/userServices'
 const CreateUser = () => {
   const navigate = useNavigate()
+  const [photo,setPhoto] = useState()
   const onFileSelect = ({currentTarget}) => {
-    console.log(currentTarget.files[0]);
+    setPhoto(currentTarget.files[0])
+    
   }
   return (
     <div className="card m-4">
       <div className="card-header">
-        <h1 className='text-dark ps-5'>Sign Up</h1>
+        <h1 className='text-dark ps-5'>Create User</h1>
       </div>
       <div className="card-body">
         <Formik
@@ -38,7 +40,12 @@ const CreateUser = () => {
           }}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              const response = await userService.createOne(values)
+              let formData = new FormData();
+              Object.keys(values).forEach(fieldName => {
+                formData.append(fieldName, values[fieldName]);
+              });
+              formData.append("photo", photo, photo.name);
+              const response = await userService.createOne(formData)
               navigate('/users')
               toast.success(response.data.message)
               return true

@@ -12,6 +12,11 @@ const ListUser = () => {
   const [pending, setPending] = useState(true);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [filterText, setFilterText] = useState('')
+  const [photo, setPhoto] = useState()
+  const onFileSelect = ({ currentTarget }) => {
+    setPhoto(currentTarget.files[0])
+
+  }
   const Loading = (
     <div className="d-flex justify-content-center h-100 align-items-center">
       <div className="spinner-grow text-info" role="status">
@@ -93,7 +98,7 @@ const ListUser = () => {
       top: '50%',
       left: '50%',
       width: '50%',
-      minHeight: '700px',
+      minHeight: '65%',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
     },
@@ -120,7 +125,7 @@ const ListUser = () => {
     setPending(false)
   }
 
-  const filteredItems = users.filter(user => user.userName.toLowerCase().includes(filterText.toLowerCase()) || user.email.toLowerCase().includes(filterText.toLowerCase()) ||user.role.toLowerCase().includes(filterText.toLowerCase()) )
+  const filteredItems = users.filter(user => user.userName.toLowerCase().includes(filterText.toLowerCase()) || user.email.toLowerCase().includes(filterText.toLowerCase()) || user.role.toLowerCase().includes(filterText.toLowerCase()))
   const searchText = (e) => {
     setFilterText(e.target.value)
   }
@@ -169,7 +174,7 @@ const ListUser = () => {
         >
           <div>Update user here<FontAwesomeIcon onClick={closeModal} icon={faXmark} className='float-end cursor-pointer p-2' /></div>
           <Formik
-            initialValues={userToUpdate || { userName: '', email: '', password:'', role: '' }}
+            initialValues={userToUpdate || { userName: '', email: '', password: '', role: '' }}
             validate={values => {
               const errors = {};
               if (!values.userName) {
@@ -189,7 +194,13 @@ const ListUser = () => {
             }}
             onSubmit={async (values) => {
               try {
-                const response = await userService.updateOne(userToUpdate._id, values)
+                console.log(values);
+                let formData = new FormData();
+                Object.keys(values).forEach(fieldName => {
+                  formData.append(fieldName, values[fieldName]);
+                });
+                photo && formData.append("photo", photo, photo.name);
+                const response = await userService.updateOne(userToUpdate._id, formData)
                 getUsers()
                 closeModal()
                 toast.success(response.data.message)
@@ -250,9 +261,12 @@ const ListUser = () => {
                   value={values.password}
                 />
                 <p className='text-danger px-4 py-2'>{errors.password && touched.password && errors.password}</p>
-                <button type="submit" className='btn btn-success'>
+                <input type='file' onChange={onFileSelect} className='form-control' />
+                <div className='mt-4'>
+                  <button type="submit" className='btn btn-success px-5' disabled={isSubmitting}>
                   Update user
-                </button>
+                  </button>
+                </div>
               </form>
             )}
           </Formik>

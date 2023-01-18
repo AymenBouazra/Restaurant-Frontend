@@ -194,7 +194,6 @@ const ListUser = () => {
             }}
             onSubmit={async (values) => {
               try {
-                console.log(values);
                 let formData = new FormData();
                 Object.keys(values).forEach(fieldName => {
                   formData.append(fieldName, values[fieldName]);

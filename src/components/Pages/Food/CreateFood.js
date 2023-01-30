@@ -16,17 +16,23 @@ const CreateFood = () => {
       </div>
       <div className="card-body">
         <Formik
-          initialValues={{ foodName: '', description: '', price: '', quantity: '' }}
+          initialValues={{ foodName: '', description: '', priceMega: '',priceGiga: '',pricePeta: '',priceTera: '' }}
           validate={values => {
             const errors = {};
             if (!values.foodName) {
               errors.foodName = 'Required';
             }
-            if (!values.price) {
-              errors.price = 'Required';
+            if (!values.priceMega) {
+              errors.priceMega = 'Required';
             }
-            if (!values.quantity) {
-              errors.quantity = 'Required';
+            if (!values.priceGiga) {
+              errors.priceGiga = 'Required';
+            }
+            if (!values.pricePeta) {
+              errors.pricePeta = 'Required';
+            }
+            if (!values.priceTera) {
+              errors.priceTera = 'Required';
             }
             if (!values.description) {
               errors.description = 'Required';
@@ -80,26 +86,46 @@ const CreateFood = () => {
                 value={values.description}
               />
               <p className='text-danger px-4 py-2'>{errors.description && touched.description && errors.description}</p>
-              <label>Quantity</label>
+              <label>Price Mega size</label>
               <input
                 type="number"
-                name="quantity"
+                name="priceMega"
                 className='form-control'
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.quantity}
+                value={values.priceMega}
               />
-              <p className='text-danger px-4 py-2'>{errors.quantity && touched.quantity && errors.quantity}</p>
-              <label>Price</label>
+              <p className='text-danger px-4 py-2'>{errors.priceMega && touched.priceMega && errors.priceMega}</p>
+              <label>Price Giga size</label>
               <input
                 type="number"
-                name="price"
+                name="priceGiga"
                 className='form-control'
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.price}
+                value={values.priceGiga}
               />
-              <p className='text-danger px-4 py-2'>{errors.price && touched.price && errors.price}</p>
+              <p className='text-danger px-4 py-2'>{errors.priceGiga && touched.priceGiga && errors.priceGiga}</p>
+              <label>Price Peta size</label>
+              <input
+                type="number"
+                name="pricePeta"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.pricePeta}
+              />
+              <p className='text-danger px-4 py-2'>{errors.pricePeta && touched.pricePeta && errors.pricePeta}</p>
+              <label>Price Tera size</label>
+              <input
+                type="number"
+                name="priceTera"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.priceTera}
+              />
+              <p className='text-danger px-4 py-2'>{errors.priceTera && touched.priceTera && errors.priceTera}</p>
               <input type='file' onChange={onFileSelect} className='form-control' />
               <div className='mt-4'>
                 <button type="submit" className='btn btn-success px-5' disabled={isSubmitting}>

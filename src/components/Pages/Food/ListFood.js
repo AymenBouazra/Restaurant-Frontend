@@ -31,19 +31,20 @@ const ListFood = () => {
       sortable: true
     },
     {
-      name: 'Quantity',
-      selector: row => row.quantity,
-      sortable: true
-    },
-    {
-      name: 'Price',
-      selector: row => row.price,
+      name: 'Prices',
+      selector: row => row.priceMega,
+      cell: ({ priceMega, priceGiga, pricePeta, priceTera}) => <div className='d-flex flex-column'>
+        <span><span style={{width:'100px', fontSize:'18px' , fontWeight:500}}>Mega:</span> <strong className='text-danger'>{priceMega} Dt</strong></span>
+        <span><span style={{width:'100px', fontSize:'18px' , fontWeight:500}}>Giga:</span> <strong className='text-danger'>{priceGiga} Dt</strong></span>
+        <span><span style={{width:'100px', fontSize:'18px' , fontWeight:500}}>Peta:</span> <strong className='text-danger'>{pricePeta} Dt</strong></span>
+        <span><span style={{width:'100px', fontSize:'18px' , fontWeight:500}}>Tera:</span> <strong className='text-danger'>{priceTera} Dt</strong></span>
+      </div>,
       sortable: true
     },
     {
       name: 'Photo',
       selector: row => row.photo,
-      cell: ({ photo }) => <img src={photo} alt='' width='50' />,
+      cell: ({ photo }) => <img src={photo} alt='' className='rounded-4' width='100' />,
     },
     {
       width: '200px',
@@ -173,21 +174,26 @@ const ListFood = () => {
         >
           <div>Update food here<FontAwesomeIcon onClick={closeModal} icon={faXmark} className='float-end cursor-pointer p-2' /></div>
           <Formik
-            initialValues={foodToUpdate || { userName: '', email: '', password: '', role: '' }}
+            initialValues={foodToUpdate ||{ foodName: '', description: '', priceMega: '',priceGiga: '',pricePeta: '',priceTera: '' }}
             validate={values => {
               const errors = {};
-              if (!values.userName) {
-                errors.userName = 'Required';
+              if (!values.foodName) {
+                errors.foodName = 'Required';
               }
-              if (!values.role) {
-                errors.role = 'Required';
+              if (!values.priceMega) {
+                errors.priceMega = 'Required';
               }
-              if (!values.email) {
-                errors.email = 'Required';
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-              ) {
-                errors.email = 'Invalid email address';
+              if (!values.priceGiga) {
+                errors.priceGiga = 'Required';
+              }
+              if (!values.pricePeta) {
+                errors.pricePeta = 'Required';
+              }
+              if (!values.priceTera) {
+                errors.priceTera = 'Required';
+              }
+              if (!values.description) {
+                errors.description = 'Required';
               }
               return errors;
             }}
@@ -219,46 +225,66 @@ const ListFood = () => {
               isSubmitting,
             }) => (
               <form onSubmit={handleSubmit} className='d-flex flex-column w-100 p-4'>
-                <label>Username</label>
-                <input
-                  type="text"
-                  name="userName"
-                  className='form-control'
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.userName}
-                />
-                <p className='text-danger px-4 py-2'>{errors.userName && touched.userName && errors.userName}</p>
-                <label>E-mail</label>
-                <input
-                  type="email"
-                  name="email"
-                  className='form-control'
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.email}
-                />
-                <p className='text-danger px-4 py-2'>{errors.email && touched.email && errors.email}</p>
-                <label>Role</label>
-                <input
-                  type="text"
-                  name="role"
-                  className='form-control'
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.role}
-                />
-                <p className='text-danger px-4 py-2'>{errors.role && touched.role && errors.role}</p>
-                <label>Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  className='form-control'
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                />
-                <p className='text-danger px-4 py-2'>{errors.password && touched.password && errors.password}</p>
+                <label>foodName</label>
+              <input
+                type="text"
+                name="foodName"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.foodName}
+              />
+              <p className='text-danger px-4 py-2'>{errors.foodName && touched.foodName && errors.foodName}</p>
+              <label>Description</label>
+              <input
+                type="text"
+                name="description"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.description}
+              />
+              <p className='text-danger px-4 py-2'>{errors.description && touched.description && errors.description}</p>
+              <label>Price Mega size</label>
+              <input
+                type="number"
+                name="priceMega"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.priceMega}
+              />
+              <p className='text-danger px-4 py-2'>{errors.priceMega && touched.priceMega && errors.priceMega}</p>
+              <label>Price Giga size</label>
+              <input
+                type="number"
+                name="priceGiga"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.priceGiga}
+              />
+              <p className='text-danger px-4 py-2'>{errors.priceGiga && touched.priceGiga && errors.priceGiga}</p>
+              <label>Price Peta size</label>
+              <input
+                type="number"
+                name="pricePeta"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.pricePeta}
+              />
+              <p className='text-danger px-4 py-2'>{errors.pricePeta && touched.pricePeta && errors.pricePeta}</p>
+              <label>Price Tera size</label>
+              <input
+                type="number"
+                name="priceTera"
+                className='form-control'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.priceTera}
+              />
+              <p className='text-danger px-4 py-2'>{errors.priceTera && touched.priceTera && errors.priceTera}</p>
                 <input type='file' onChange={onFileSelect} className='form-control' />
                 <div className='mt-4'>
                   <button type="submit" className='btn btn-success px-5' disabled={isSubmitting}>

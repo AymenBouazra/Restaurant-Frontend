@@ -6,7 +6,7 @@ import navs from '../_nav'
 const SidebarNav = () => {
     return (
         <div className=''>
-            <label className='sidebar-brand'>E-commerce App</label>
+            <label className='sidebar-brand'>Restaurant App</label>
             <div className='d-flex flex-column my-3'>
                 <ul className='sidebar-ul'>
                     {navs.map((nav, index) => {

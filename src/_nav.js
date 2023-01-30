@@ -1,38 +1,38 @@
 const navs = [
     {
-        name:'Users-List',
-        children:[{
+        name: 'Users',
+        children: [{
             to: '/users',
-            name:'List users'
+            name: 'List users'
         },
         {
             to: '/users/add',
-            name:'Add user'
+            name: 'Add user'
         }]
     },
     {
-        name:'Product-List',
-        children:[{
-            to: '/products',
-            name:'List product'
+        name: 'Food',
+        children: [{
+            to: '/food',
+            name: 'List food'
         },
         {
-            to: '/products/add',
-            name:'Add product'
+            to: '/food/add',
+            name: 'Add food'
         }]
     },
     {
-        name:'Category-List',
-        children:[{
+        name: 'Category',
+        children: [{
             to: '/categories',
-            name:'Category List'
+            name: 'Category List'
         },
         {
             to: '/categories/add',
-            name:'Add category'
+            name: 'Add category'
         },]
     },
-    
+
 
 ]
 export default navs

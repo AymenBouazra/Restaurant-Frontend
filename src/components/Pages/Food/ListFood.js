@@ -5,10 +5,10 @@ import DataTable from 'react-data-table-component'
 import Modal from 'react-modal';
 import { Formik } from 'formik'
 import { toast } from 'react-toastify'
-import userService from '../../../services/userServices'
-const ListUser = () => {
-  const [users, setUsers] = useState([])
-  const [userToUpdate, setUserToUpdate] = useState({})
+import foodService from '../../../services/foodServices'
+const ListFood = () => {
+  const [foods, setFood] = useState([])
+  const [foodToUpdate, setFoodToUpdate] = useState({})
   const [pending, setPending] = useState(true);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [filterText, setFilterText] = useState('')
@@ -26,18 +26,18 @@ const ListUser = () => {
   )
   const columns = [
     {
-      name: 'Username',
-      selector: row => row.userName,
+      name: 'Food name',
+      selector: row => row.foodName,
       sortable: true
     },
     {
-      name: 'E-mail',
-      selector: row => row.email,
+      name: 'Quantity',
+      selector: row => row.quantity,
       sortable: true
     },
     {
-      name: 'Role',
-      selector: row => row.role,
+      name: 'Price',
+      selector: row => row.price,
       sortable: true
     },
     {
@@ -106,8 +106,8 @@ const ListUser = () => {
   Modal.setAppElement("*");
 
   const openModal = async (id) => {
-    const response = await userService.getOne(id)
-    setUserToUpdate(response.data)
+    const response = await foodService.getOne(id)
+    setFoodToUpdate(response.data)
     setIsOpen(true);
   }
   const closeModal = () => {
@@ -115,17 +115,17 @@ const ListUser = () => {
   }
 
   const handleDelete = async (id) => {
-    await userService.removeOne(id)
-    getUsers()
+    await foodService.removeOne(id)
+    getFood()
   }
 
-  const getUsers = async () => {
-    const response = await userService.getAllUsers()
-    setUsers(response.data)
+  const getFood = async () => {
+    const response = await foodService.getAllFood()
+    setFood(response.data)
     setPending(false)
   }
 
-  const filteredItems = users.filter(user => user.userName.toLowerCase().includes(filterText.toLowerCase()) || user.email.toLowerCase().includes(filterText.toLowerCase()) || user.role.toLowerCase().includes(filterText.toLowerCase()))
+  const filteredItems = foods.filter(food => food.foodName.toLowerCase().includes(filterText.toLowerCase()))
   const searchText = (e) => {
     setFilterText(e.target.value)
   }
@@ -140,13 +140,13 @@ const ListUser = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    getUsers()
+    getFood()
     return controller.abort()
   }, [filterText])
   return (
     <div className="card m-4">
       <div className="card-header">
-        <h1 className='text-dark ps-5'>Users List</h1>
+        <h1 className='text-dark ps-5'>food List</h1>
       </div>
       <div className="card-body">
         <DataTable
@@ -171,9 +171,9 @@ const ListUser = () => {
           ariaHideApp={false}
           contentLabel="Update Modal"
         >
-          <div>Update user here<FontAwesomeIcon onClick={closeModal} icon={faXmark} className='float-end cursor-pointer p-2' /></div>
+          <div>Update food here<FontAwesomeIcon onClick={closeModal} icon={faXmark} className='float-end cursor-pointer p-2' /></div>
           <Formik
-            initialValues={userToUpdate || { userName: '', email: '', password: '', role: '' }}
+            initialValues={foodToUpdate || { userName: '', email: '', password: '', role: '' }}
             validate={values => {
               const errors = {};
               if (!values.userName) {
@@ -198,8 +198,8 @@ const ListUser = () => {
                   formData.append(fieldName, values[fieldName]);
                 });
                 photo && formData.append("photo", photo, photo.name);
-                const response = await userService.updateOne(userToUpdate._id, formData)
-                getUsers()
+                const response = await foodService.updateOne(foodToUpdate._id, formData)
+                getFood()
                 closeModal()
                 toast.success(response.data.message)
                 return true
@@ -262,7 +262,7 @@ const ListUser = () => {
                 <input type='file' onChange={onFileSelect} className='form-control' />
                 <div className='mt-4'>
                   <button type="submit" className='btn btn-success px-5' disabled={isSubmitting}>
-                    Update user
+                    Update food
                   </button>
                 </div>
               </form>
@@ -274,4 +274,4 @@ const ListUser = () => {
   )
 }
 
-export default ListUser
+export default ListFood

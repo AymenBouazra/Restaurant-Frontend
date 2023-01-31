@@ -286,6 +286,7 @@ const ListFood = () => {
               />
               <p className='text-danger px-4 py-2'>{errors.priceTera && touched.priceTera && errors.priceTera}</p>
                 <input type='file' onChange={onFileSelect} className='form-control' />
+                <img src={values.photo} width='250px' className='rounded-4 mt-4' alt='pizza'/>
                 <div className='mt-4'>
                   <button type="submit" className='btn btn-success px-5' disabled={isSubmitting}>
                     Update food

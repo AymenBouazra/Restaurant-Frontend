@@ -30,7 +30,7 @@ const Login = () => {
             const response = await axios.post('http://localhost:4000/api/login', values)
             localStorage.setItem('token',response.data.token)
             toast.success(response.data.message)
-            navigate('/')
+            navigate('/admin')
             
           } catch (error) {
             toast.error(error.response.data.message)

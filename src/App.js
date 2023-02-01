@@ -9,20 +9,31 @@ import {
 } from "react-router-dom";
 import React, { Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
-import routes from './routes'
+import { adminRoutes, clientRoutes } from './routes'
 import Page404 from './components/Page404';
 import PrivateRoute from './PrivateRoute/PrivateRoute';
 const Layout = React.lazy(() => import('./components/Layout'));
+const ClientLayout = React.lazy(() => import('./clientSide/ClientLayout'));
 const Login = React.lazy(() => import('./components/AuthComponents/Login'));
 const Register = React.lazy(() => import('./components/AuthComponents/Register'));
-const Loading = 
+const Loading =
   <div className="d-flex justify-content-center vh-100 align-items-center">
     <div className="spinner-grow text-info" role="status">
       <span className="visually-hidden">Loading...</span>
     </div>
   </div>
 
-const routing = routes.map((route) => {
+const adminRouting = adminRoutes.map((route) => {
+  return (
+    route.element && {
+      path: route.path,
+      element: <route.element />,
+      exact: route.exact,
+      name: route.name
+    }
+  )
+})
+const clientRouting = clientRoutes.map((route) => {
   return (
     route.element && {
       path: route.path,
@@ -34,6 +45,11 @@ const routing = routes.map((route) => {
 })
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <ClientLayout />,
+    children: clientRouting
+  },
+  {
     path: "/register",
     element: <Register />,
   },
@@ -42,13 +58,13 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: '/',
+    path: '/admin',
     element: <PrivateRoute><Layout /></PrivateRoute>,
-    children: routing
+    children: adminRouting
   },
   {
-    path:'*',
-    element:<Page404 />
+    path: '*',
+    element: <Page404 />
   },
 
 ]);
@@ -68,7 +84,7 @@ function App() {
         theme="colored"
       />
       <Suspense fallback={Loading}>
-      <RouterProvider router={router} fallbackElement={Loading}/>
+        <RouterProvider router={router} fallbackElement={Loading} />
 
       </Suspense>
     </div>

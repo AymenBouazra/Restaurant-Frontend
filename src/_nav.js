@@ -2,33 +2,33 @@ const navs = [
     {
         name: 'Users',
         children: [{
-            to: '/users',
+            to: '/admin/users',
             name: 'List users'
         },
         {
-            to: '/users/add',
+            to: '/admin/users/add',
             name: 'Add user'
         }]
     },
     {
         name: 'Food',
         children: [{
-            to: '/food',
+            to: '/admin/food',
             name: 'List food'
         },
         {
-            to: '/food/add',
+            to: '/admin/food/add',
             name: 'Add food'
         }]
     },
     {
         name: 'Category',
         children: [{
-            to: '/categories',
+            to: '/admin/categories',
             name: 'Category List'
         },
         {
-            to: '/categories/add',
+            to: '/admin/categories/add',
             name: 'Add category'
         },]
     },

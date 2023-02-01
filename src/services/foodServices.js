@@ -3,6 +3,11 @@ import http from '../utils/http'
 const getAllFood = async () => {
     return await http.get("/food");
 }
+
+const getAllFoodClientSide = async () => {
+    return await http.get("/clientSideFood");
+}
+
 const updateOne = (id, data) => {
     return http.put(`/food/${id}`, data);
 };
@@ -20,6 +25,7 @@ const createOne = data => {
 
 const FoodService = {
     getAllFood,
+    getAllFoodClientSide,
     updateOne,
     removeOne,
     getOne,

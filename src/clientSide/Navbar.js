@@ -29,11 +29,12 @@ const Navbar = () => {
           </ul>
         </div>
         <Link to='/cart' className="position-relative">
-          <FontAwesomeIcon icon={faCartShopping} />
-          <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          <FontAwesomeIcon icon={faCartShopping} size='lg' />
+          {cart.cartTotalQuantity !== 0 && <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
             {cart.cartTotalQuantity}
             <span className="visually-hidden">unread messages</span>
-          </span>
+          </span>}
+
         </Link>
       </div>
     </nav>

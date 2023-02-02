@@ -13,9 +13,8 @@ const Food = () => {
     console.log("Api", isLoading);
     console.log({ food, error });
 
-    const handleAddToCart = (product) => {
-        dispatch(addToCart(product));
-        // navigate('/cart')
+    const handleAddToCart = (food) => {
+        dispatch(addToCart(food))
     };
 
     return (

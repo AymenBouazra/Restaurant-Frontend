@@ -8,6 +8,7 @@ import {
     removeFromCart,
 } from "./features/CartSlice";
 import './cart.css'
+import { Link } from 'react-router-dom'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
@@ -18,7 +19,6 @@ const Cart = () => {
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const navigate = useNavigate()
-    // console.log(cart);
 
     useEffect(() => {
         dispatch(getTotals());
@@ -37,10 +37,15 @@ const Cart = () => {
         dispatch(clearCart());
     };
     const handleSubmitCart = async () => {
-        console.log(cart);
-        const response = await axios.post('http://localhost:4000/api/order', cart)
-        toast.success(response.data)
-        navigate('/food')
+        try {
+            const response = await axios.post('http://localhost:4000/api/order', cart)
+            toast.success(response.data.message)
+            dispatch(clearCart())
+            navigate('/food')
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+
     }
     return (
         <div className="cart-container">
@@ -48,7 +53,7 @@ const Cart = () => {
                 <div className="cart-empty">
                     <p>Your cart is currently empty</p>
                     <div className="start-shopping">
-                        <span>Start Shopping</span>
+                        <Link to='/food' className='btn btn-primary'>Start Shopping</Link>
                     </div>
                 </div>
             ) : (

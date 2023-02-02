@@ -48,7 +48,7 @@ const cartSlice = createSlice({
                 });
             } else if (state.cartItems[itemIndex].cartQuantity === 1) {
                 const nextCartItems = state.cartItems.filter(
-                    (item) => item.id !== action.payload.id
+                    (item) => item._id !== action.payload._id
                 );
 
                 state.cartItems = nextCartItems;

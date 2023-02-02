@@ -11,11 +11,14 @@ import './cart.css'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axios from 'axios'
 const Cart = () => {
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
-    console.log(cart);
+    const navigate = useNavigate()
+    // console.log(cart);
 
     useEffect(() => {
         dispatch(getTotals());
@@ -33,6 +36,12 @@ const Cart = () => {
     const handleClearCart = () => {
         dispatch(clearCart());
     };
+    const handleSubmitCart = async () => {
+        console.log(cart);
+        const response = await axios.post('http://localhost:4000/api/order', cart)
+        toast.success(response.data)
+        navigate('/food')
+    }
     return (
         <div className="cart-container">
             {cart.cartItems.length === 0 ? (
@@ -77,15 +86,15 @@ const Cart = () => {
                                                             </div>
                                                         </div>
                                                     </th>
-                                                    <td className="border-0 ">
+                                                    <td className="border-0  align-middle">
                                                         <div className="py-auto">
                                                             <strong> {item.priceMega * item.cartQuantity}Dt </strong>
                                                         </div>
                                                     </td>
                                                     <td className="border-0 align-middle">
-                                                        <button className="btn btn-dark"><FontAwesomeIcon icon={faMinus} /></button>
-                                                        <strong>{item.cartQuantity}</strong>
-                                                        <button className="btn btn-dark"><FontAwesomeIcon icon={faPlus} /></button>
+                                                        <button className="btn btn-dark" onClick={() => handleDecreaseCart(item)}><FontAwesomeIcon icon={faMinus} /></button>
+                                                        <strong> {item.cartQuantity} </strong>
+                                                        <button className="btn btn-dark" onClick={() => handleAddToCart(item)}><FontAwesomeIcon icon={faPlus} /></button>
                                                     </td>
                                                     <td className="border-0 align-middle"><button className="btn btn-danger" onClick={() => handleRemoveFromCart(item)}><FontAwesomeIcon icon={faTrashAlt} size='xl' color="white" /></button></td>
                                                 </tr>
@@ -102,8 +111,9 @@ const Cart = () => {
                                 </tbody>
                             </table>
 
-                            <div className="d-flex justify-content-end">
-                                <button className="btn btn-success rounded-4" style={{ width: '150px', fontSize: '14px', fontWeight: 'bold' }} >CONFIRM ORDER</button>
+                            <div className="d-flex justify-content-between">
+                                <button className="btn btn-danger" onClick={handleClearCart}>Cancel order</button>
+                                <button className="btn btn-success rounded-4" style={{ width: '150px', fontSize: '14px', fontWeight: 'bold' }} onClick={handleSubmitCart} >CONFIRM ORDER</button>
                             </div>
                         </div>
                     </div>

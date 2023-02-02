@@ -3,11 +3,32 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import CartReducer, { getTotals } from './clientSide/features/CartSlice';
+import FoodReducer, { foodFetch } from './clientSide/features/foodSlice';
+import { foodApi } from './clientSide/features/foodApi';
+
+const store = configureStore({
+  reducer: {
+    food: FoodReducer,
+    cart: CartReducer,
+    [foodApi.reducerPath]: foodApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(foodApi.middleware),
+})
+
+
+store.dispatch(foodFetch());
+store.dispatch(getTotals());
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );
 

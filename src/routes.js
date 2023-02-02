@@ -2,6 +2,7 @@ import { lazy } from "react"
 const Home = lazy(() => import('./components/Home'))
 const ClientHome = lazy(() => import('./clientSide/Home'))
 const ClientFood = lazy(() => import('./clientSide/Food'))
+const ClientCart = lazy(() => import('./clientSide/Cart'))
 const CreateUser = lazy(() => import('./components/Pages/User/CreateUser'))
 const ListUser = lazy(() => import('./components/Pages/User/ListUser'))
 const CreateFood = lazy(() => import('./components/Pages/Food/CreateFood'))
@@ -65,6 +66,12 @@ export const clientRoutes = [
         path: '/food',
         element: ClientFood,
         name: 'Food',
+        exact: true
+    },
+    {
+        path: '/cart',
+        element: ClientCart,
+        name: 'Cart',
         exact: true
     },
 

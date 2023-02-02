@@ -1,7 +1,16 @@
-import React from 'react'
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { getTotals } from './features/CartSlice'
 
 const Navbar = () => {
+  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getTotals());
+  }, [cart, dispatch])
   return (
     <nav className="navbar navbar-expand-lg bg-nav">
       <div className="container">
@@ -19,6 +28,13 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
+        <Link to='/cart' className="position-relative">
+          <FontAwesomeIcon icon={faCartShopping} />
+          <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {cart.cartTotalQuantity}
+            <span className="visually-hidden">unread messages</span>
+          </span>
+        </Link>
       </div>
     </nav>
   )

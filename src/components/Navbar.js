@@ -1,9 +1,28 @@
-import { faBars, faGear, faSignOut, faUserCog } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faGear, faNoteSticky, faSignOut, faUserCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const Navbar = ({ openSideBar }) => {
+  const [notifications, setNotifications] = useState([])
+  const [itemsToShow, setItemsToShow] = useState(5)
+  const showMore = () => {
+    setItemsToShow(prevState => prevState + 5)
+  }
+  const showLess = () => {
+    setItemsToShow(prevState => prevState - 5)
+  }
+  const handleClick = async (id) => {
+    await axios.delete('http://localhost:4000/api/notification/' + id)
+  }
+  const sub = async () => {
+    const response = await axios.get('http://localhost:4000/api/notification')
+    setNotifications(response.data)
+  }
+  useEffect(() => {
+    sub()
+  }, [])
   return (
     <nav className="navbar navbar-expand-lg bg-nav px-1" >
       <div className="container-fluid">
@@ -18,18 +37,45 @@ const Navbar = ({ openSideBar }) => {
               <Link className="nav-link" aria-current="page" to='/'>Home</Link>
             </li>
           </ul>
-          <div className="btn-group">
-            <button className="btn text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <FontAwesomeIcon icon={faGear} />
-            </button>
-            <ul className="dropdown-menu dropdown-menu-lg-end">
-              <li><Link className="dropdown-item text-dark" to="/users/profile"><FontAwesomeIcon icon={faUserCog} /> Profile</Link></li>
-              <li><button className="dropdown-item" ><FontAwesomeIcon icon={faSignOut} /> Logout</button></li>
-            </ul>
+          <div>
+            <div className="btn-group">
+              <button className="btn text-white " data-bs-toggle="dropdown" id="dropdownMenuClickable" data-bs-auto-close="false" aria-expanded="false">
+                <FontAwesomeIcon icon={faNoteSticky} />
+              </button>
+              <ul className="dropdown-menu dropdown-menu-lg-end" style={{ width: '400px' }} aria-labelledby="dropdownMenuClickable">
+                {notifications ? notifications.sort((a, b) => { return b.orderNumber - a.orderNumber }).slice(0, itemsToShow).map((e) => {
+                  return (
+                    <div key={e._id} >
+                      <li className='' >
+                        <button className='btn btn-light w-100' type='button' onClick={() => handleClick(e._id)}>
+                          <h4 className='text-success'>{e.title}</h4>
+                          <span className='opacity-75'>{e.description}</span>
+                        </button>
+                      </li>
+                    </div>
+                  )
+                }) : <li>No notifications has been registered..</li>}
+                {notifications.length > 5 && <li className='d-flex justify-content-between'>
+                  <div>{notifications.length > itemsToShow && <button type='button' className='btn link-primary' onClick={showMore}>Show more..</button>}</div>
+
+                  <div>{notifications.length < itemsToShow && < button type='button' className='btn link-primary' onClick={showLess}>Show less..</button>}</div>
+                </li>
+                }
+              </ul>
+            </div>
+            <div className="btn-group">
+              <button className="btn text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <FontAwesomeIcon icon={faGear} />
+              </button>
+              <ul className="dropdown-menu dropdown-menu-lg-end">
+                <li><Link className="dropdown-item text-dark" to="/users/profile"><FontAwesomeIcon icon={faUserCog} /> Profile</Link></li>
+                <li><button className="dropdown-item" ><FontAwesomeIcon icon={faSignOut} /> Logout</button></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </nav>
+    </nav >
   )
 }
 

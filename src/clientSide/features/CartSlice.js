@@ -7,6 +7,9 @@ const initialState = {
         : [],
     cartTotalQuantity: 0,
     cartTotalAmount: 0,
+    table: localStorage.getItem("table")
+        ? Number(localStorage.getItem("table"))
+        : 1
 };
 
 const cartSlice = createSlice({
@@ -101,9 +104,16 @@ const cartSlice = createSlice({
             state.cartItems = [];
             localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
         },
+        clearTable(state, action) {
+            state.table = 1
+        },
+        setTable(state, action) {
+            localStorage.setItem('table', action.payload)
+            state.table = Number(action.payload)
+        }
     },
 });
 
-export const { addToCart, decreaseCart, removeFromCart, getTotals, clearCart } = cartSlice.actions;
+export const { addToCart, decreaseCart, removeFromCart, getTotals, clearCart, setTable, clearTable } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -6,6 +6,8 @@ import {
     decreaseCart,
     getTotals,
     removeFromCart,
+    setTable,
+    clearTable
 } from "./features/CartSlice";
 import './cart.css'
 import { Link } from 'react-router-dom'
@@ -35,12 +37,18 @@ const Cart = () => {
     };
     const handleClearCart = () => {
         dispatch(clearCart());
+        dispatch(clearTable())
     };
+    const handleChangeTable = (e) => {
+        dispatch(setTable(e.target.value))
+    }
     const handleSubmitCart = async () => {
         try {
             const response = await axios.post('http://localhost:4000/api/order', cart)
+            localStorage.removeItem('table')
+            dispatch(clearCart());
+            dispatch(clearTable());
             toast.success(response.data.message)
-            dispatch(clearCart())
             navigate('/food')
         } catch (error) {
             toast.error(error.response.data.message)
@@ -115,7 +123,16 @@ const Cart = () => {
                                     </tr>
                                 </tbody>
                             </table>
-
+                            <div>
+                                <label>Select Table:</label>
+                                <select onChange={(text) => handleChangeTable(text)} className='form-select' >
+                                    <option value='1' >Table 1</option>
+                                    <option value='2' >Table 2</option>
+                                    <option value='3' >Table 3</option>
+                                    <option value='4' >Table 4</option>
+                                    <option value='5' >Table 5</option>
+                                </select>
+                            </div>
                             <div className="d-flex justify-content-between">
                                 <button className="btn btn-danger" onClick={handleClearCart}>Cancel order</button>
                                 <button className="btn btn-success rounded-4" style={{ width: '150px', fontSize: '14px', fontWeight: 'bold' }} onClick={handleSubmitCart} >CONFIRM ORDER</button>

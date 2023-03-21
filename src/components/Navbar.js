@@ -14,7 +14,7 @@ const Navbar = ({ openSideBar }) => {
     setItemsToShow(prevState => prevState - 5)
   }
   const handleClick = async (id) => {
-    await axios.delete('http://localhost:4000/api/notification/' + id)
+    await axios.put('http://localhost:4000/api/notification/' + id)
   }
   const sub = async () => {
     const response = await axios.get('http://localhost:4000/api/notification')
@@ -43,7 +43,7 @@ const Navbar = ({ openSideBar }) => {
                 <FontAwesomeIcon icon={faNoteSticky} />
               </button>
               <ul className="dropdown-menu dropdown-menu-lg-end" style={{ width: '400px' }} aria-labelledby="dropdownMenuClickable">
-                {notifications ? notifications.sort((a, b) => { return b.orderNumber - a.orderNumber }).slice(0, itemsToShow).map((e) => {
+                {notifications && notifications.sort((a, b) => { return b.orderNumber - a.orderNumber }).slice(0, itemsToShow).map((e) => {
                   return (
                     <div key={e._id} >
                       <li className='' >
@@ -52,15 +52,17 @@ const Navbar = ({ openSideBar }) => {
                           <span className='opacity-75'>{e.description}</span>
                         </button>
                       </li>
+                      <span style={{ width: '30px', height: '30px', backgroundColor: '#2E89FF', borderRadius: '50%' }}></span>
                     </div>
                   )
-                }) : <li>No notifications has been registered..</li>}
+                })}
                 {notifications.length > 5 && <li className='d-flex justify-content-between'>
                   <div>{notifications.length > itemsToShow && <button type='button' className='btn link-primary' onClick={showMore}>Show more..</button>}</div>
 
                   <div>{notifications.length < itemsToShow && < button type='button' className='btn link-primary' onClick={showLess}>Show less..</button>}</div>
                 </li>
                 }
+                {notifications.length === 0 && <li><button className='btn w-100'>No notifications has been registered..</button></li>}
               </ul>
             </div>
             <div className="btn-group">

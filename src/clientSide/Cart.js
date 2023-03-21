@@ -66,9 +66,12 @@ const Cart = () => {
                 </div>
             ) : (
                 <div className="row">
+                    <div className="start-shopping">
+                        <Link to='/food' className='btn btn-primary'>Return to shop</Link>
+                    </div>
                     <div className="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
                         <div className="table-responsive">
-                            <table className="table">
+                            <table className="table border border-3">
                                 <thead>
                                     <tr>
                                         <th scope="col" className="border-0 bg-light">
@@ -125,7 +128,7 @@ const Cart = () => {
                             </table>
                             <div>
                                 <label>Select Table:</label>
-                                <select onChange={(text) => handleChangeTable(text)} className='form-select' >
+                                <select onChange={(text) => handleChangeTable(text)} style={{ fontSize: '20px', fontWeight: '500' }} className='form-select rounded-0' >
                                     <option value='1' >Table 1</option>
                                     <option value='2' >Table 2</option>
                                     <option value='3' >Table 3</option>
@@ -133,9 +136,9 @@ const Cart = () => {
                                     <option value='5' >Table 5</option>
                                 </select>
                             </div>
-                            <div className="d-flex justify-content-between">
-                                <button className="btn btn-danger" onClick={handleClearCart}>Cancel order</button>
-                                <button className="btn btn-success rounded-4" style={{ width: '150px', fontSize: '14px', fontWeight: 'bold' }} onClick={handleSubmitCart} >CONFIRM ORDER</button>
+                            <div className="d-flex justify-content-between mt-4">
+                                <button className="btn btn-danger rounded-0" onClick={handleClearCart} style={{ width: '150px', fontSize: '14px', fontWeight: 'bold' }} >CANCEL ORDER</button>
+                                <button className="btn btn-success rounded-0" onClick={handleSubmitCart} style={{ width: '150px', fontSize: '14px', fontWeight: 'bold' }}  >CONFIRM ORDER</button>
                             </div>
                         </div>
                     </div>

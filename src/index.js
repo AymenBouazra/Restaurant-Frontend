@@ -7,19 +7,24 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import CartReducer, { getTotals } from './clientSide/features/CartSlice';
 import FoodReducer, { foodFetch } from './clientSide/features/foodSlice';
+import NotificationReducer, { notificationFetch } from './clientSide/features/NotificationSlice';
 import { foodApi } from './clientSide/features/foodApi';
+import { notificationApi } from './clientSide/features/NotificationApi';
 
 const store = configureStore({
   reducer: {
     food: FoodReducer,
     cart: CartReducer,
+    notification: NotificationReducer,
     [foodApi.reducerPath]: foodApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(foodApi.middleware),
+    getDefaultMiddleware().concat([foodApi.middleware, notificationApi.middleware]),
 })
 
 
+store.dispatch(notificationFetch());
 store.dispatch(foodFetch());
 store.dispatch(getTotals());
 

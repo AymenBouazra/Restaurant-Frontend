@@ -21,16 +21,23 @@ const navs = [
             name: 'Add food'
         }]
     },
+    // {
+    //     name: 'Category',
+    //     children: [{
+    //         to: '/admin/categories',
+    //         name: 'Category List'
+    //     },
+    //     {
+    //         to: '/admin/categories/add',
+    //         name: 'Add category'
+    //     },]
+    // },
     {
-        name: 'Category',
+        name: 'Orders',
         children: [{
-            to: '/admin/categories',
-            name: 'Category List'
-        },
-        {
-            to: '/admin/categories/add',
-            name: 'Add category'
-        },]
+            to: '/admin/orders',
+            name: 'Order list'
+        }]
     },
 
 

@@ -7,6 +7,7 @@ const CreateUser = lazy(() => import('./components/Pages/User/CreateUser'))
 const ListUser = lazy(() => import('./components/Pages/User/ListUser'))
 const CreateFood = lazy(() => import('./components/Pages/Food/CreateFood'))
 const ListFood = lazy(() => import('./components/Pages/Food/ListFood'))
+const OrderList = lazy(() => import('./components/Pages/Order/OrderList'))
 const ListCategory = lazy(() => import('./components/Pages/Category/ListCategory'))
 const CreateCategory = lazy(() => import('./components/Pages/Category/CreateCategory'))
 export const adminRoutes = [
@@ -38,6 +39,12 @@ export const adminRoutes = [
         path: '/admin/food',
         element: ListFood,
         name: 'Foods',
+        exact: true
+    },
+    {
+        path: '/admin/orders',
+        element: OrderList,
+        name: 'Orders',
         exact: true
     },
     {

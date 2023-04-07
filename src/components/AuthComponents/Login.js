@@ -25,13 +25,12 @@ const Login = () => {
           }
           return errors;
         }}
-        onSubmit={ async (values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting }) => {
           try {
             const response = await axios.post('http://localhost:4000/api/login', values)
-            localStorage.setItem('token',response.data.token)
+            localStorage.setItem('token', response.data.token)
             toast.success(response.data.message)
             navigate('/admin')
-            
           } catch (error) {
             toast.error(error.response.data.message)
           }

@@ -7,6 +7,8 @@ import {
   createBrowserRouter,
   RouterProvider
 } from "react-router-dom";
+import './firebase-messaging-sw'
+
 import React, { Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { adminRoutes, clientRoutes } from './routes'
@@ -69,6 +71,8 @@ const router = createBrowserRouter([
 
 ]);
 function App() {
+
+
   return (
     <div>
       <ToastContainer

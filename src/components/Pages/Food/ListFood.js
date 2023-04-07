@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronUp, faEdit, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons'
-import DataTable from 'react-data-table-component'
+import React, { useEffect, useState } from 'react';
+import DataTable from 'react-data-table-component';
 import Modal from 'react-modal';
-import { Formik } from 'formik'
-import { toast } from 'react-toastify'
-import foodService from '../../../services/foodServices'
+import foodService from '../../../services/foodServices';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronUp, faEdit, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { Formik } from 'formik';
+import { toast } from 'react-toastify';
 const ListFood = () => {
   const [foods, setFood] = useState([])
   const [foodToUpdate, setFoodToUpdate] = useState({})
@@ -15,7 +15,6 @@ const ListFood = () => {
   const [photo, setPhoto] = useState()
   const onFileSelect = ({ currentTarget }) => {
     setPhoto(currentTarget.files[0])
-
   }
   const Loading = (
     <div className="d-flex justify-content-center h-100 align-items-center">
@@ -32,19 +31,17 @@ const ListFood = () => {
     },
     {
       name: 'Prices',
-      selector: row => row.priceMega,
-      cell: ({ priceMega, priceGiga, pricePeta, priceTera}) => <div className='d-flex flex-column'>
-        <span><span style={{width:'100px', fontSize:'18px' , fontWeight:500}}>Mega:</span> <strong className='text-danger'>{priceMega} Dt</strong></span>
-        <span><span style={{width:'100px', fontSize:'18px' , fontWeight:500}}>Giga:</span> <strong className='text-danger'>{priceGiga} Dt</strong></span>
-        <span><span style={{width:'100px', fontSize:'18px' , fontWeight:500}}>Peta:</span> <strong className='text-danger'>{pricePeta} Dt</strong></span>
-        <span><span style={{width:'100px', fontSize:'18px' , fontWeight:500}}>Tera:</span> <strong className='text-danger'>{priceTera} Dt</strong></span>
+      selector: row => row.price,
+      cell: ({ price }) => <div className='d-flex flex-column'>
+        <span><strong className='text-danger'>{price}.00 Dt</strong></span>
+
       </div>,
       sortable: true
     },
     {
       name: 'Photo',
       selector: row => row.photo,
-      cell: ({ photo }) => <img src={photo} alt='' className='rounded-4' width='100' />,
+      cell: ({ photo }) => <img src={photo} alt='' className='rounded-4 my-2' width='80' />,
     },
     {
       width: '200px',
@@ -125,7 +122,6 @@ const ListFood = () => {
     setFood(response.data)
     setPending(false)
   }
-
   const filteredItems = foods.filter(food => food.foodName.toLowerCase().includes(filterText.toLowerCase()))
   const searchText = (e) => {
     setFilterText(e.target.value)
@@ -147,7 +143,7 @@ const ListFood = () => {
   return (
     <div className="card m-4">
       <div className="card-header">
-        <h1 className='text-dark ps-5'>food List</h1>
+        <h1 className='text-dark ps-5'>Food list</h1>
       </div>
       <div className="card-body">
         <DataTable
@@ -174,23 +170,14 @@ const ListFood = () => {
         >
           <div>Update food here<FontAwesomeIcon onClick={closeModal} icon={faXmark} className='float-end cursor-pointer p-2' /></div>
           <Formik
-            initialValues={foodToUpdate ||{ foodName: '', description: '', priceMega: '',priceGiga: '',pricePeta: '',priceTera: '' }}
+            initialValues={foodToUpdate || { foodName: '', description: '', price: '' }}
             validate={values => {
               const errors = {};
               if (!values.foodName) {
                 errors.foodName = 'Required';
               }
-              if (!values.priceMega) {
-                errors.priceMega = 'Required';
-              }
-              if (!values.priceGiga) {
-                errors.priceGiga = 'Required';
-              }
-              if (!values.pricePeta) {
-                errors.pricePeta = 'Required';
-              }
-              if (!values.priceTera) {
-                errors.priceTera = 'Required';
+              if (!values.price) {
+                errors.price = 'Required';
               }
               if (!values.description) {
                 errors.description = 'Required';
@@ -226,67 +213,37 @@ const ListFood = () => {
             }) => (
               <form onSubmit={handleSubmit} className='d-flex flex-column w-100 p-4'>
                 <label>foodName</label>
-              <input
-                type="text"
-                name="foodName"
-                className='form-control'
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.foodName}
-              />
-              <p className='text-danger px-4 py-2'>{errors.foodName && touched.foodName && errors.foodName}</p>
-              <label>Description</label>
-              <input
-                type="text"
-                name="description"
-                className='form-control'
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.description}
-              />
-              <p className='text-danger px-4 py-2'>{errors.description && touched.description && errors.description}</p>
-              <label>Price Mega size</label>
-              <input
-                type="number"
-                name="priceMega"
-                className='form-control'
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.priceMega}
-              />
-              <p className='text-danger px-4 py-2'>{errors.priceMega && touched.priceMega && errors.priceMega}</p>
-              <label>Price Giga size</label>
-              <input
-                type="number"
-                name="priceGiga"
-                className='form-control'
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.priceGiga}
-              />
-              <p className='text-danger px-4 py-2'>{errors.priceGiga && touched.priceGiga && errors.priceGiga}</p>
-              <label>Price Peta size</label>
-              <input
-                type="number"
-                name="pricePeta"
-                className='form-control'
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.pricePeta}
-              />
-              <p className='text-danger px-4 py-2'>{errors.pricePeta && touched.pricePeta && errors.pricePeta}</p>
-              <label>Price Tera size</label>
-              <input
-                type="number"
-                name="priceTera"
-                className='form-control'
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.priceTera}
-              />
-              <p className='text-danger px-4 py-2'>{errors.priceTera && touched.priceTera && errors.priceTera}</p>
+                <input
+                  type="text"
+                  name="foodName"
+                  className='form-control'
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.foodName}
+                />
+                <p className='text-danger px-4 py-2'>{errors.foodName && touched.foodName && errors.foodName}</p>
+                <label>Description</label>
+                <input
+                  type="text"
+                  name="description"
+                  className='form-control'
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.description}
+                />
+                <p className='text-danger px-4 py-2'>{errors.description && touched.description && errors.description}</p>
+                <label>Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  className='form-control'
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.price}
+                />
+                <p className='text-danger px-4 py-2'>{errors.price && touched.price && errors.price}</p>
                 <input type='file' onChange={onFileSelect} className='form-control' />
-                <img src={values.photo} width='250px' className='rounded-4 mt-4' alt='pizza'/>
+                <img src={values.photo} width='250px' className='rounded-4 mt-4' alt='pizza' />
                 <div className='mt-4'>
                   <button type="submit" className='btn btn-success px-5' disabled={isSubmitting}>
                     Update food

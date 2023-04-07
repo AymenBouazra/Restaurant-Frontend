@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addToCart,
@@ -11,13 +11,28 @@ import {
 } from "./features/CartSlice";
 import './cart.css'
 import { Link } from 'react-router-dom'
-
+import jwt_decode from 'jwt-decode'
+import { io } from "socket.io-client";
+import orderService from '../services/orderServices';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faMinus, faPlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios'
 const Cart = () => {
+    const [socket, setSocket] = useState(null)
+    const [user, setUser] = useState('')
+    useEffect(() => {
+        const getSocket = async () => {
+            setSocket(io("http://localhost:5000"));
+            const token = localStorage.getItem('token')
+            const decoded = jwt_decode(token);
+            setUser(decoded.userId)
+        }
+        getSocket()
+    }, [])
+    useEffect(() => {
+        socket?.emit('newUser', user)
+    }, [socket, user])
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const navigate = useNavigate()
@@ -44,30 +59,38 @@ const Cart = () => {
     }
     const handleSubmitCart = async () => {
         try {
-            const response = await axios.post('http://localhost:4000/api/order', cart)
+            const response = await orderService.createOne(cart)
             localStorage.removeItem('table')
             dispatch(clearCart());
             dispatch(clearTable());
+            socket.emit('sendNotification', {
+                user: user,
+                message: 'New order'
+            })
             toast.success(response.data.message)
             navigate('/food')
         } catch (error) {
             toast.error(error.response.data.message)
         }
-
     }
+
+    useEffect(() => {
+        socket?.emit('newUser', user)
+    }, [socket, user])
+
     return (
         <div className="cart-container">
             {cart.cartItems.length === 0 ? (
                 <div className="cart-empty">
                     <p>Your cart is currently empty</p>
                     <div className="start-shopping">
-                        <Link to='/food' className='btn btn-primary'>Start Shopping</Link>
+                        <Link to='/food' className='btn btn-info mb-5'><FontAwesomeIcon icon={faChevronLeft} /> Start Shopping</Link>
                     </div>
                 </div>
             ) : (
                 <div className="row">
                     <div className="start-shopping">
-                        <Link to='/food' className='btn btn-primary'>Return to shop</Link>
+                        <Link to='/food' className='btn btn-info mb-5'><FontAwesomeIcon icon={faChevronLeft} /> Return to shop</Link>
                     </div>
                     <div className="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
                         <div className="table-responsive">
@@ -104,7 +127,7 @@ const Cart = () => {
                                                     </th>
                                                     <td className="border-0  align-middle">
                                                         <div className="py-auto">
-                                                            <strong> {item.priceMega * item.cartQuantity}Dt </strong>
+                                                            <strong> {item.price * item.cartQuantity}Dt </strong>
                                                         </div>
                                                     </td>
                                                     <td className="border-0 align-middle">

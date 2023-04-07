@@ -41,7 +41,7 @@ const Food = () => {
                                                 <hr />
                                                 <div className="space-between">
                                                     <div className="food-card_price">
-                                                        <span>{food.priceMega}Dt</span>
+                                                        <span>{food.price}Dt</span>
                                                     </div>
                                                     <div className="food-card_order-count">
                                                         <div className="input-group mb-3">

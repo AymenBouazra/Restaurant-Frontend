@@ -1,12 +1,24 @@
-import { faBars, faGear, faNoteSticky, faSignOut, faUserCog } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faBell, faGear, faSignOut, faUserCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const Navbar = ({ openSideBar }) => {
+  const navigate = useNavigate()
   const [notifications, setNotifications] = useState([])
+  const [notifNotRead, setNotifNotRead] = useState(0)
   const [itemsToShow, setItemsToShow] = useState(5)
+
+  const readNotifications = async () => {
+    await axios.put('http://localhost:4000/api/allNotifications')
+    window.location.reload()
+  }
+  const deleteAllNotifications = async () => {
+    await axios.delete('http://localhost:4000/api/deleteAllNotifications')
+    window.location.reload()
+  }
   const showMore = () => {
     setItemsToShow(prevState => prevState + 5)
   }
@@ -15,14 +27,22 @@ const Navbar = ({ openSideBar }) => {
   }
   const handleClick = async (id) => {
     await axios.put('http://localhost:4000/api/notification/' + id)
+    window.location.replace('/admin/orders')
+
   }
-  const sub = async () => {
+  const getNotifs = useCallback(async () => {
     const response = await axios.get('http://localhost:4000/api/notification')
-    setNotifications(response.data)
-  }
-  useEffect(() => {
-    sub()
+    setNotifications(prev => prev = response.data)
+    let num = response.data.filter((notif) => notif.read === false).length
+    setNotifNotRead(num)
   }, [])
+  // useEffect(() => {
+  //   toast.info('New notification!')
+
+  // }, [notifications])
+  useEffect(() => {
+    getNotifs()
+  }, [getNotifs])
   return (
     <nav className="navbar navbar-expand-lg bg-nav px-1" >
       <div className="container-fluid">
@@ -39,20 +59,28 @@ const Navbar = ({ openSideBar }) => {
           </ul>
           <div>
             <div className="btn-group">
-              <button className="btn text-white " data-bs-toggle="dropdown" id="dropdownMenuClickable" data-bs-auto-close="false" aria-expanded="false">
-                <FontAwesomeIcon icon={faNoteSticky} />
+              <button className="btn text-white" data-bs-toggle="dropdown" id="dropdownMenuClickable" data-bs-auto-close="false" aria-expanded="false">
+                <FontAwesomeIcon icon={faBell} size='lg' />
+                {notifNotRead !== 0 && <span className="position-absolute top-25 start-75 translate-middle badge rounded-pill bg-danger">
+                  {notifNotRead}
+                  <span className="visually-hidden">unread messages</span>
+                </span>}
               </button>
-              <ul className="dropdown-menu dropdown-menu-lg-end" style={{ width: '400px' }} aria-labelledby="dropdownMenuClickable">
+              <ul className="dropdown-menu dropdown-menu-lg-end p-0" style={{ width: '400px' }} aria-labelledby="dropdownMenuClickable">
+                <li className='d-flex justify-content-between'><button className='btn btn-link' onClick={readNotifications}>Read all notifications</button>
+                  <button className='btn btn-link text-secondary' onClick={deleteAllNotifications}>Delete all</button></li>
                 {notifications && notifications.sort((a, b) => { return b.orderNumber - a.orderNumber }).slice(0, itemsToShow).map((e) => {
                   return (
                     <div key={e._id} >
                       <li className='' >
-                        <button className='btn btn-light w-100' type='button' onClick={() => handleClick(e._id)}>
-                          <h4 className='text-success'>{e.title}</h4>
-                          <span className='opacity-75'>{e.description}</span>
-                        </button>
+                        <div className={`w-100 d-flex justify-content-between p-2 rounded-3`} style={{ backgroundColor: `${e.read ? '#EEF1FF' : '#D2DAFF'}`, cursor: 'pointer', margin: '2px 0' }} onClick={() => handleClick(e._id)}>
+                          <div className='d-flex flex-column col-11'>
+                            <h4 className='text-primary'>{e.title}</h4>
+                            <span className='opacity-75'>{e.description}</span>
+                          </div>
+                          {!e.read && <div style={{ width: '15px', height: '15px', backgroundColor: '#2E89FF', borderRadius: '50%' }}></div>}
+                        </div>
                       </li>
-                      <span style={{ width: '30px', height: '30px', backgroundColor: '#2E89FF', borderRadius: '50%' }}></span>
                     </div>
                   )
                 })}
